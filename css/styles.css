@@ -1,0 +1,67 @@
+/* =====================================================================
+   ESTILO DA PÁGINA
+   Cores (tema claro/escuro), centralização do canvas e botão de som.
+   ===================================================================== */
+
+:root {
+  --bg: #f2f2f5;
+  --fg: #1a1a22;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101018;
+    --fg: #eee;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #101018;
+  --fg: #eee;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #1b1b2e;
+  border-radius: 8px;
+  image-rendering: pixelated;
+  touch-action: none;
+}
+
+.mute-button {
+  font-size: 18px;
+  padding: 6px 12px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: #445;
+  color: #fff;
+  cursor: pointer;
+}
+
+.controls-help {
+  font-size: 14px;
+  margin: 8px 0;
+  text-align: center;
+}
