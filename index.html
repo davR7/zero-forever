@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Zero Forever</title>
+    <meta name="description" content="Derrote os chefes e conquiste a maior pontuação!">
+    <meta name="theme-color" content="#101018">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <link rel="icon" href="public/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="public/favicon-32.png">
+    <link rel="apple-touch-icon" href="public/apple-touch-icon.png">
+
+    <!-- Prévia do link (WhatsApp, Facebook, LinkedIn etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Zero Forever">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:title" content="Zero Forever">
+    <meta property="og:description" content="Derrote os chefes e conquiste a maior pontuação!">
+    <meta property="og:url" content="[domain]">
+    <meta property="og:image" content="[domain]/public/og-image.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Capacete do Zero e título do jogo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Zero Forever">
+    <meta name="twitter:description" content="Derrote os chefes e conquiste a maior pontuação!">
+    <meta name="twitter:image" content="[domain]/public/og-image.png">
+  </head>
+  <body>
+    <canvas id="gameCanvas" width="800" height="450"></canvas>
+    <button id="muteButton" class="mute-button" title="Ligar/desligar o som (M)">🔊</button>
+
+    <!-- Ordem importa: cada arquivo usa os anteriores. -->
+    <script src="js/labels.js"></script>
+    <script src="js/config/global.js"></script>
+    <script src="js/config/player.js"></script>
+    <script src="js/config/boss1.js"></script>
+    <script src="js/config/boss2.js"></script>
+    <script src="js/config/boss3.js"></script>
+    <script src="js/assets.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/sprites.js"></script>
+    <script src="js/entities.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+  </body>
+</html>
