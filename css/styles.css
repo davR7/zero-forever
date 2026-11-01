@@ -38,6 +38,14 @@ body {
   padding: 12px;
 }
 
+/* Contêiner do canvas: os botões HTML do menu ficam por cima, posicionados em % do canvas. */
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  container-type: inline-size;
+}
+
 canvas {
   display: block;
   width: 100%;
@@ -65,3 +73,41 @@ canvas {
   margin: 8px 0;
   text-align: center;
 }
+
+/* ----- Botões SIM / NÃO da escolha de personagem ----- */
+.select-actions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 75.3%;
+  display: flex;
+  justify-content: center;
+  gap: 5cqw;
+}
+
+.select-actions[hidden] { display: none; }
+
+.menu-button {
+  width: 19.6cqw;
+  height: 4.8cqw;
+  min-height: 30px;
+  min-width: 96px;
+  font: 400 clamp(14px, 3cqw, 24px) / 1 Impact, "Arial Narrow", "Arial Black", sans-serif;
+  letter-spacing: 0.04em;
+  color: #f2fbff;
+  text-shadow: 0 2px 0 #04121c, 0 0 4px #04121c, 1px 1px 0 #04121c, -1px 1px 0 #04121c;
+  border: 2px solid var(--edge);
+  border-radius: 8px;
+  background: linear-gradient(180deg, var(--top) 0%, var(--mid) 55%, var(--bottom) 100%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.35), inset 0 -3px 0 rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: transform 0.08s, filter 0.08s;
+}
+
+.menu-button-yes { --edge: #08324a; --top: #48d6ff; --mid: #1590cf; --bottom: #0b5c8c; }   /* ciano: combina com o brilho azul do painel */
+.menu-button-no  { --edge: #4a3006; --top: #ffcf5a; --mid: #d99a1e; --bottom: #8a5c0a; }   /* dourado: combina com as trilhas do circuito */
+
+.menu-button:hover:not(:disabled) { filter: brightness(1.12); }
+.menu-button:active:not(:disabled) { transform: translateY(2px); }
+.menu-button:focus-visible { outline: 3px solid #7fe6ff; outline-offset: 2px; }
+.menu-button:disabled { filter: grayscale(0.9) brightness(0.6); cursor: not-allowed; }
