@@ -4,6 +4,7 @@
    Estados:
      loading      -> carregando as imagens
      title        -> tela inicial
+     characterSelect -> escolha do personagem (botões SIM/NÃO em HTML por cima do canvas)
      playing      -> luta em andamento
      bossDefeated -> um boss caiu, falta(m) outro(s)
      gameOver     -> o jogador perdeu
@@ -16,6 +17,11 @@ class Game {
     this.canvas.height = CONFIG.canvas.height;
     this.ctx = this.canvas.getContext('2d');
     this.muteButton = document.getElementById('muteButton');
+    this.selectActions = document.getElementById('selectActions');   // botões SIM/NÃO (HTML + CSS)
+    this.selectYes = document.getElementById('selectYes');
+    this.selectNo = document.getElementById('selectNo');
+    this.selectYes.textContent = LABELS.texts.yes;
+    this.selectNo.textContent = LABELS.texts.no;
 
     this.assets = new Assets(CONFIG.images);
     this.input = new InputController(CONFIG.controls);
@@ -23,11 +29,14 @@ class Game {
     this.stage = new Stage();
     this.hud = new Hud();
     this.titleScreen = new TitleScreen();
+    this.characterSelectScreen = new CharacterSelectScreen();
     this.overlay = new MessageOverlay();
 
     this.state = 'loading';
     this.framesInState = 0;
     this.player = null;
+    this.menuIndex = Math.max(0, CONFIG.characters.findIndex((character) => !character.locked));   // cartão em foco no menu
+    this.character = CONFIG.characters[this.menuIndex];                                           // personagem escolhido para jogar
     this.boss = null;
     this.bossIndex = 0;
     this.projectiles = [];
@@ -51,14 +60,28 @@ class Game {
     const unlockAudio = () => this.audio.unlock();
     window.addEventListener('keydown', unlockAudio);
     window.addEventListener('pointerdown', unlockAudio);
-    this.canvas.addEventListener('pointerdown', () => this.handleCanvasPress());
+    this.canvas.addEventListener('pointerdown', (event) => this.handleCanvasPress(event));
+    this.selectYes.addEventListener('click', () => { this.selectYes.blur(); if (this.state === 'characterSelect') this.confirmCharacter(); });
+    this.selectNo.addEventListener('click', () => { this.selectNo.blur(); if (this.state === 'characterSelect') this.setState('title'); });
     this.muteButton.addEventListener('click', () => { this.audio.unlock(); this.toggleMute(); });
   }
 
   setState(newState) {
     this.state = newState;
     this.framesInState = 0;
+    if (newState === 'characterSelect') this.audio.playMusic('menu');   // música do menu
+    else if (newState === 'title') this.audio.stopMusic();
+    this.syncSelectButtons();
   }
+
+  /** Mostra os botões SIM/NÃO só na escolha de personagem; SIM fica desligado num cartão "Em breve". */
+  syncSelectButtons() {
+    const onMenu = this.state === 'characterSelect';
+    this.selectActions.hidden = !onMenu;
+    this.selectYes.disabled = !onMenu || Boolean(this.focusedCharacter.locked);
+  }
+
+  get focusedCharacter() { return CONFIG.characters[this.menuIndex]; }
 
   get hasInputDelayPassed() { return this.framesInState > CONFIG.overlayInputDelayFrames; }
   get bossNumber() { return this.bossIndex + 1; }
@@ -70,9 +93,27 @@ class Game {
   }
 
   /* ----------------------------- fluxo ----------------------------- */
+  /** Ao abrir o menu, o foco sempre começa no primeiro personagem liberado (não fica num cartão "Em breve"). */
+  openCharacterSelect() {
+    this.menuIndex = Math.max(0, CONFIG.characters.findIndex((character) => !character.locked));
+    this.setState('characterSelect');
+  }
+
+  moveMenuFocus(step) {
+    const count = CONFIG.characters.length;
+    this.menuIndex = (this.menuIndex + step + count) % count;
+    this.syncSelectButtons();
+  }
+
+  confirmCharacter() {
+    if (this.focusedCharacter.locked) return;
+    this.character = this.focusedCharacter;
+    this.startNewRun();
+  }
+
   startNewRun() {
-    this.player = new Player();
-    this.player.renderer = new ZeroSpriteRenderer(this.assets.get('zero'));
+    this.player = new Player(this.character.settings);
+    this.player.renderer = new CHARACTER_RENDERERS[this.character.renderer](this.assets.get(this.character.image));
     this.bossIndex = 0;
     this.score = 0;
     this.beginBossFight();
@@ -91,14 +132,24 @@ class Game {
 
   startNextBoss() {
     this.bossIndex++;
-    this.player.heal(CONFIG.player.healBetweenBosses);
+    this.player.heal(this.player.settings.healBetweenBosses);
     this.beginBossFight();
   }
 
-  handleCanvasPress() {
-    if (this.state === 'title') this.startNewRun();
+  handleCanvasPress(event) {
+    if (this.state === 'title') this.openCharacterSelect();
+    else if (this.state === 'characterSelect') this.handleMenuPress(event);
     else if (this.state === 'bossDefeated' && this.hasInputDelayPassed) this.startNextBoss();
     else if ((this.state === 'gameOver' || this.state === 'victory') && this.hasInputDelayPassed) this.startNewRun();
+  }
+
+  /** Toque/clique num cartão do menu: coloca o cartão em foco. */
+  handleMenuPress(event) {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = (event.clientX - rect.left) * this.canvas.width / rect.width;
+    const y = (event.clientY - rect.top) * this.canvas.height / rect.height;
+    const index = this.characterSelectScreen.cardAt(x, y, CONFIG.characters.length);
+    if (index >= 0) { this.menuIndex = index; this.syncSelectButtons(); }
   }
 
   /* ----------------------------- atualização ----------------------------- */
@@ -108,7 +159,13 @@ class Game {
 
     switch (this.state) {
       case 'title':
-        if (this.input.wasPressed('confirm')) this.startNewRun();
+        if (this.input.wasPressed('confirm')) this.openCharacterSelect();
+        break;
+      case 'characterSelect':
+        if (this.input.wasPressed('moveLeft')) this.moveMenuFocus(-1);
+        if (this.input.wasPressed('moveRight')) this.moveMenuFocus(1);
+        if (this.input.wasPressed('back')) this.setState('title');
+        else if (this.input.wasPressed('confirm')) this.confirmCharacter();
         break;
       case 'playing':
         this.updateBattle();
@@ -222,6 +279,10 @@ class Game {
       this.titleScreen.draw(ctx, this.assets, timeInSeconds);
       return;
     }
+    if (this.state === 'characterSelect') {
+      this.characterSelectScreen.draw(ctx, this.assets, timeInSeconds, this.menuIndex);
+      return;
+    }
 
     this.drawBattleScene(ctx);
     const texts = LABELS.texts;
@@ -257,6 +318,9 @@ class Game {
     requestAnimationFrame((time) => this.frame(time));
   }
 }
+
+/* Qual classe desenha cada personagem (o campo "renderer" de CONFIG.characters). */
+const CHARACTER_RENDERERS = { ZeroSpriteRenderer };
 
 const game = new Game();
 game.start();
