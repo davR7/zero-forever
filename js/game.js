@@ -7,7 +7,7 @@
      characterSelect -> escolha do personagem (botões SIM/NÃO em HTML por cima do canvas)
      playing      -> luta em andamento
      bossDefeated -> um boss caiu, falta(m) outro(s)
-     gameOver     -> o jogador perdeu
+     gameOver     -> o jogador perdeu (volta para a tela inicial)
      victory      -> todos os bosses derrotados
    ===================================================================== */
 class Game {
@@ -140,7 +140,8 @@ class Game {
     if (this.state === 'title') this.openCharacterSelect();
     else if (this.state === 'characterSelect') this.handleMenuPress(event);
     else if (this.state === 'bossDefeated' && this.hasInputDelayPassed) this.startNextBoss();
-    else if ((this.state === 'gameOver' || this.state === 'victory') && this.hasInputDelayPassed) this.startNewRun();
+    else if (this.state === 'gameOver' && this.hasInputDelayPassed) this.setState('title');
+    else if (this.state === 'victory' && this.hasInputDelayPassed) this.startNewRun();
   }
 
   /** Toque/clique num cartão do menu: coloca o cartão em foco. */
@@ -174,6 +175,8 @@ class Game {
         if (this.hasInputDelayPassed && this.input.wasPressed('confirm')) this.startNextBoss();
         break;
       case 'gameOver':
+        if (this.input.wasPressed('restart') || (this.hasInputDelayPassed && this.input.wasPressed('confirm'))) this.setState('title');
+        break;
       case 'victory':
         if (this.input.wasPressed('restart') || (this.hasInputDelayPassed && this.input.wasPressed('confirm'))) this.startNewRun();
         break;
@@ -289,7 +292,7 @@ class Game {
 
     const summary = this.scoreSummaryLines;
     if (this.state === 'bossDefeated') this.overlay.draw(ctx, texts.bossDefeated(this.boss.name), texts.nextBossHint, summary);
-    else if (this.state === 'gameOver') this.overlay.draw(ctx, texts.cpuWon(this.boss.name), texts.restartHint, summary);
+    else if (this.state === 'gameOver') this.overlay.draw(ctx, texts.cpuWon(this.boss.name), texts.backToTitleHint, summary);
     else if (this.state === 'victory') this.overlay.draw(ctx, texts.playerWon, texts.restartHint, summary);
   }
 

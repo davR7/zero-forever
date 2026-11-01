@@ -6,6 +6,7 @@ const LABELS = {
     playerWon: 'VOCÊ VENCEU! 🎉',
     cpuWon: (n) => `${n} VENCEU! 🤖`,
     restartHint: 'Pressione R ou toque para jogar de novo',
+    backToTitleHint: 'Pressione R ou toque para voltar à tela inicial',
     bossDefeated: (n) => `${n} FOI DERROTADO!`,
     nextBossHint: 'Pressione ENTER para o próximo boss',
     score: 'SCORE',
