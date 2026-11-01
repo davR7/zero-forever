@@ -30,7 +30,14 @@
     <meta name="twitter:image" content="https://zero-forever.netlify.app/public/og-image.png">
   </head>
   <body>
-    <canvas id="gameCanvas" width="800" height="450"></canvas>
+    <div class="stage">
+      <canvas id="gameCanvas" width="800" height="450"></canvas>
+      <!-- Botões da escolha de personagem: HTML + CSS por cima do canvas (aparecem só nessa tela). -->
+      <div class="select-actions" id="selectActions" hidden>
+        <button type="button" class="menu-button menu-button-yes" id="selectYes"></button>
+        <button type="button" class="menu-button menu-button-no" id="selectNo"></button>
+      </div>
+    </div>
     <button id="muteButton" class="mute-button" title="Ligar/desligar o som (M)">🔊</button>
 
     <!-- Ordem importa: cada arquivo usa os anteriores. -->
@@ -40,6 +47,7 @@
     <script src="js/config/boss1.js"></script>
     <script src="js/config/boss2.js"></script>
     <script src="js/config/boss3.js"></script>
+    <script src="js/config/characters.js"></script>
     <script src="js/assets.js"></script>
     <script src="js/input.js"></script>
     <script src="js/audio.js"></script>
