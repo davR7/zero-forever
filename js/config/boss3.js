@@ -30,7 +30,7 @@ CONFIG.bosses.push({
 
   attack: {
     style: 'iceSlash',
-    damage: 22, speed: 6.5, radius: 12,
+    damage: 16, speed: 6.5, radius: 12,
     cooldown: 110, range: 620, chancePerFrame: 0.035,
     windupFrames: 40,
     recoveryFrames: 24,

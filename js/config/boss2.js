@@ -31,7 +31,7 @@ CONFIG.bosses.push({
 
   attack: {
     style: 'purpleSlash',
-    damage: 20, speed: 7, radius: 16,
+    damage: 22, speed: 7, radius: 16,
     cooldown: 42, range: 800, chancePerFrame: 0.05,
     verticalRange: 200,
   },
