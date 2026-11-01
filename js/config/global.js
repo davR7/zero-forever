@@ -19,6 +19,7 @@ const CONFIG = {
     shoot: ['j', 'x', 'z'],
     confirm: ['enter', ' '],
     restart: ['r'],
+    back: ['escape'],
     toggleMute: ['m'],
   },
 
