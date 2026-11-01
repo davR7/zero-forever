@@ -8,13 +8,14 @@
    ===================================================================== */
 
 const AUDIO_CONFIG = {
-  /* Músicas. Chave = "type" do boss (campo "type" em js/config/bossN.js). Tocam em loop durante a luta. */
+  /* Músicas. Chave = "type" do boss (campo "type" em js/config/bossN.js) ou "menu" (escolha de personagem). Tocam em loop. */
   music: {
     volume: 0.5,                // volume geral da música
     tracks: {
-      claw:   { file: 'audio/music/steel_against_stone.mp3',       volume: 1 },   // 1º boss: TITAN
+      claw: { file: 'audio/music/steel_against_stone.mp3', volume: 1 },   // 1º boss: TITAN
       shadow: { file: 'audio/music/steadfast.mp3', volume: 1 },   // 2º boss: SHADOW ZERO
-      ice:    { file: 'audio/music/victory_at_the_summit.mp3',      volume: 1 },   // 3º boss: CRYONOX
+      ice: { file: 'audio/music/victory_at_the_summit.mp3', volume: 1 },   // 3º boss: CRYONOX
+      menu: { file: 'audio/music/where_the_hero_rests.mp3', volume: 1 },   // tela de escolha de personagem
     },
   },
 
@@ -24,16 +25,16 @@ const AUDIO_CONFIG = {
     volume: 1,                  // volume geral dos efeitos
     poolSize: 4,                // quantas cópias de cada efeito podem tocar ao mesmo tempo
     sounds: {
-      playerShot:  { file: 'audio/sfx/player_shot.wav',  volume: 1 },   // tiro do Zero
-      bossShot:    { file: 'audio/sfx/boss_shot.wav',    volume: 1 },   // ataque dos bosses (Titan / Shadow Zero)
-      iceCharge:   { file: 'audio/sfx/ice_charge.wav',   volume: 1 },   // Cryonox carregando
-      iceShot:     { file: 'audio/sfx/ice_shot.wav',     volume: 1 },   // Cryonox disparando
+      playerShot: { file: 'audio/sfx/player_shot.wav', volume: 1 },   // tiro do Zero
+      bossShot: { file: 'audio/sfx/boss_shot.wav', volume: 1 },   // ataque dos bosses (Titan / Shadow Zero)
+      iceCharge: { file: 'audio/sfx/ice_charge.wav', volume: 1 },   // Cryonox carregando
+      iceShot: { file: 'audio/sfx/ice_shot.wav', volume: 1 },   // Cryonox disparando
       chargeStart: { file: 'audio/sfx/charge_start.wav', volume: 1 },   // Zero começa a carregar
       chargeReady: { file: 'audio/sfx/charge_ready.wav', volume: 1 },   // carga cheia
-      chargeShot:  { file: 'audio/sfx/charge_shot.wav',  volume: 1 },   // disparo carregado
-      chargeHit:   { file: 'audio/sfx/charge_hit.wav',   volume: 1 },   // tiro carregado acerta o boss
-      bossHit:     { file: 'audio/sfx/boss_hit.wav',     volume: 1 },   // tiro normal acerta o boss
-      playerHit:   { file: 'audio/sfx/player_hit.wav',   volume: 1 },   // Zero leva dano
+      chargeShot: { file: 'audio/sfx/charge_shot.wav', volume: 1 },   // disparo carregado
+      chargeHit: { file: 'audio/sfx/charge_hit.wav', volume: 1 },   // tiro carregado acerta o boss
+      bossHit: { file: 'audio/sfx/boss_hit.wav', volume: 1 },   // tiro normal acerta o boss
+      playerHit: { file: 'audio/sfx/player_hit.wav', volume: 1 },   // Zero leva dano
     },
   },
 };
@@ -65,7 +66,7 @@ class AudioManager {
 
   /** Navegadores só liberam som depois de um clique/tecla. Chame em qualquer interação. */
   unlock() {
-    if (this.currentMusic && this.currentMusic.paused) this.currentMusic.play().catch(() => {});
+    if (this.currentMusic && this.currentMusic.paused) this.currentMusic.play().catch(() => { });
   }
 
   toggleMute() {
@@ -97,7 +98,7 @@ class AudioManager {
     track.volume = Math.max(0, Math.min(1, music.volume * (settings.volume ?? 1)));
     track.muted = this.muted;
     track.currentTime = 0;
-    track.play().catch(() => {});   // o navegador pode bloquear até a primeira interação (unlock tenta de novo)
+    track.play().catch(() => { });   // o navegador pode bloquear até a primeira interação (unlock tenta de novo)
     this.currentMusic = track;
   }
 
@@ -118,6 +119,6 @@ class AudioManager {
     element.muted = this.muted;
     element.volume = Math.max(0, Math.min(1, AUDIO_CONFIG.sfx.volume * (sfx.volume ?? 1)));
     element.currentTime = 0;
-    element.play().catch(() => {});
+    element.play().catch(() => { });
   }
 }
