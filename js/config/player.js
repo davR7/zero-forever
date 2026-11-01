@@ -16,17 +16,16 @@ CONFIG.player = {
   maxHealth: 100,
   moveSpeed: 4.5,
   jumpSpeed: 13.5,
-  // Pulo duplo: apertar o pulo DE NOVO (soltar e apertar) já no ar dá um segundo impulso.
-  // speed = velocidade do 2º pulo (o 1º usa jumpSpeed). Com 10, o ponto mais alto possível
-  // (2º pulo no topo do 1º) fica ~1,5x a altura do pulo simples. Valor maior = pula mais alto.
-  // extraJumps = quantos pulos extras no ar (1 = pulo duplo). ringFrames = duração do anel visual.
+  // Pulo duplo: solte e aperte o pulo novamente no ar para dar um segundo impulso.
+  // speed = força do 2º pulo (10 = até 1,5x a altura do pulo normal).
+  // extraJumps = pulos extras no ar (1 = pulo duplo). ringFrames = duração do efeito visual.
   doubleJump: { speed: 10, extraJumps: 1, ringFrames: 14 },
   healBetweenBosses: 1.0,
   attack: { cooldown: 16, damage: 5, speed: 10, radius: 5, color: '#ffff00', bufferFrames: 14 },
   chargeShot: {
     startDelay: 14,
     chargeFrames: 66,
-    damage: 30, speed: 11, radius: 18,
+    damage: 18, speed: 11, radius: 18,
     recoveryFrames: 6,
   },
 };
