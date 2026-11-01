@@ -153,8 +153,7 @@ class Fighter {
    Player: o Zero controlado pelo teclado.
    --------------------------------------------------------------------- */
 class Player extends Fighter {
-  constructor() {
-    const settings = CONFIG.player;
+  constructor(settings = CONFIG.player) {
     super({
       x: settings.startX, scale: settings.scale, maxHealth: settings.maxHealth, facing: 1,
       hitHalfWidth: 34 * settings.scale * 0.35, hitHeight: 50 * settings.scale,
